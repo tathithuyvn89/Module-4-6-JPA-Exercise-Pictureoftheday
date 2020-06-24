@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<img id="img-of-the-day">
+<script>
+    let query = "https://api.nasa.gov/planetary/apod?api_key=uJWb1Xj2wj6psdqO5RSP7pGb7TU3GrasInnKEVB1";
+    let request = new XMLHttpRequest();
+    request.open('GET', query);
+    request.onload = function () {
+        if (request.status === 200) {
+            let response = JSON.parse(request.responseText);
+            document.getElementById('img-of-the-day').setAttribute('src', response.url);
+        }
+    };
+    request.send();
+</script>
+<form method="post" th:action="@{/home}" th:object="${comment}">
+    <table>
+        <tr>
+            <td>POINT</td>
+            <td><input type="number" max="5" min="3" th:field="*{point}"/></td>
+        </tr>
+        <tr>
+            <td>Tác giả</td>
+            <td><input type="text" th:field="*{author}"/></td>
+        </tr>
+        <tr>
+            <td>Nội dung</td>
+            <td><input type="text" th:field="*{feedback}"/></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Create Blog"></td>
+        </tr>
+    </table>
+</form>
+<table>
+    <tr>
+        <td>Point</td>
+        <td>author</td>
+        <td>Feedback</td>
+        <td>date</td>
+        <td>likes</td>
+    </tr>
+    <th:block th:each="comment: ${comments}">
+        <tr>
+            <td th:text="${comment.getPoint()}"></td>
+            <td th:text="${comment.getAuthor()}"></td>
+            <td th:text="${comment.getFeedback()}"></td>
+            <td th:text="${comment.getDate()}"></td>
+            <td th:text="${comment.getLikes()}"></td>
+        </tr>
+    </th:block>
+</table>
+</body>
+</html>
